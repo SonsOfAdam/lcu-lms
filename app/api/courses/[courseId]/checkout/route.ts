@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
+// Require the library
+var paystack = require('paystack')('sk_test_a3316cc7a9c00c018534a17d95657fe9daf237f6');
 
 export async function POST(
   req: Request,
@@ -44,7 +46,7 @@ export async function POST(
       {
         quantity: 1,
         price_data: {
-          currency: "USD",
+          currency: "NGN",
           product_data: {
             name: course.title,
             description: course.description!,
@@ -54,41 +56,52 @@ export async function POST(
       }
     ];
 
-    let stripeCustomer = await db.stripeCustomer.findUnique({
-      where: {
-        userId: user.id,
-      },
-      select: {
-        stripeCustomerId: true,
-      }
-    });
+    // let stripeCustomer = await db.stripeCustomer.findUnique({
+    //   where: {
+    //     userId: user.id,
+    //   },
+    //   select: {
+    //     stripeCustomerId: true,
+    //   }
+    // });
 
-    if (!stripeCustomer) {
-      const customer = await stripe.customers.create({
-        email: user.emailAddresses[0].emailAddress,
-      });
+    // if (!stripeCustomer) {
+    //   const customer = await stripe.customers.create({
+    //     email: user.emailAddresses[0].emailAddress,
+    //   });
 
-      stripeCustomer = await db.stripeCustomer.create({
-        data: {
-          userId: user.id,
-          stripeCustomerId: customer.id,
-        }
-      });
-    }
+    //   stripeCustomer = await db.stripeCustomer.create({
+    //     data: {
+    //       userId: user.id,
+    //       stripeCustomerId: customer.id,
+    //     }
+    //   });
+    // }
 
-    const session = await stripe.checkout.sessions.create({
-      customer: stripeCustomer.stripeCustomerId,
-      line_items,
-      mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}?success=1`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}?canceled=1`,
+    const paystackSession = await paystack.transaction.initialize({
+      email: user.emailAddresses[0].emailAddress,
+      amount: Math.round(course.price! * 100),
       metadata: {
-        courseId: course.id,
-        userId: user.id,
-      }
-    });
+        name: course.title,
+        description: course.description!,
+      },
+      callback_url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}?success=1`, 
+    })
+    console.log(paystackSession, " hello")
 
-    return NextResponse.json({ url: session.url });
+    // const session = await stripe.checkout.sessions.create({
+    //   customer: stripeCustomer.stripeCustomerId,
+    //   line_items,
+    //   mode: 'payment',
+    //   success_url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}?success=1`,
+    //   cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}?canceled=1`,
+    //   metadata: {
+    //     courseId: course.id,
+    //     userId: user.id,
+    //   }
+    // });
+
+    return NextResponse.json({ url: paystackSession.data.authorization_url });
   } catch (error) {
     console.log("[COURSE_ID_CHECKOUT]", error);
     return new NextResponse("Internal Error", { status: 500 })

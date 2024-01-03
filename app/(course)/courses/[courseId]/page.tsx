@@ -6,6 +6,7 @@ const CourseIdPage = async ({
 }: {
   params: { courseId: string; }
 }) => {
+  console.log(params, " idpage")
   const course = await db.course.findUnique({
     where: {
       id: params.courseId,

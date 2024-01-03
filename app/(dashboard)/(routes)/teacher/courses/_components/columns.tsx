@@ -47,7 +47,7 @@ export const columns: ColumnDef<Course>[] = [
       const price = parseFloat(row.getValue("price") || "0");
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: "USD"
+        currency: "NGN"
       }).format(price);
 
       return <div>{formatted}</div>
@@ -72,7 +72,7 @@ export const columns: ColumnDef<Course>[] = [
       return (
         <Badge className={cn(
           "bg-slate-500",
-          isPublished && "bg-sky-700"
+          isPublished && "bg-sky-900"
         )}>
           {isPublished ? "Published" : "Draft"}
         </Badge>
