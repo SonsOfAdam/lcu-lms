@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 import { stripe } from "@/lib/stripe";
 import { db } from "@/lib/db";
-var paystack = require('paystack')('sk_test_a3316cc7a9c00c018534a17d95657fe9daf237f6');
+var paystack = require('paystack')('sk_live_7803c444e118e885450630864d6430bade832da2');
 
 
 export async function POST(req: Request) {
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     const verifyResponse = await paystack.verify({
       reference:""
     })
-    http://localhost:3000/courses/c3f4aa84-acb7-4a72-acd8-adeb801a2f13/chapters/2029f250-774a-4dfe-9c7e-be82f8dc6793
+    http://app.lifecarduniversity.com/courses/c3f4aa84-acb7-4a72-acd8-adeb801a2f13/chapters/2029f250-774a-4dfe-9c7e-be82f8dc6793
     console.log(verifyResponse," verify ", req)
     if (verifyResponse.data.status) {
       // if (!userId || !courseId) {

@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs";
 
-var paystack = require('paystack')('sk_test_a3316cc7a9c00c018534a17d95657fe9daf237f6');
+var paystack = require('paystack')('sk_live_7803c444e118e885450630864d6430bade832da2');
 
 export const verifyTransaction = async (
   reference: string,

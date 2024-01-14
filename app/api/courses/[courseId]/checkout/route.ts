@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 // Require the library
-var paystack = require('paystack')('sk_test_a3316cc7a9c00c018534a17d95657fe9daf237f6');
+var paystack = require('paystack')('sk_live_7803c444e118e885450630864d6430bade832da2');
 
 export async function POST(
   req: Request,
