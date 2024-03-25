@@ -16,11 +16,6 @@ const guestRoutes = [
     label: "View Courses",
     href: "/search",
   },
-  {
-    icon: GroupIcon,
-    label: "Student Community",
-    href: "/",
-  },
 ];
 
 const teacherRoutes = [
